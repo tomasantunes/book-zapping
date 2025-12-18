@@ -1,4 +1,5 @@
 const EPub = require('epub');
+const path = require('path');
 
 function renderRandomPage(filePath) {
     return new Promise((resolve, reject) => {
@@ -15,7 +16,7 @@ function renderRandomPage(filePath) {
                 } else {
                     resolve({
                         content: text || 'No content available',
-                        filename: filePath.split('/').pop(),
+                        filename: path.basename(filePath),
                         pageNumber: randomChapterIndex + 1
                     });
                 }

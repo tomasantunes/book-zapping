@@ -11,7 +11,7 @@ async function getRandomEbookPage() {
     const filePath = path.join(EBOOKS_DIR, ebookFile);
 
     if (ebookFile.endsWith('.pdf')) {
-        return await pdfRenderer.renderRandomPage(filePath);
+        return await pdfRenderer.renderPdfPageAsImage(filePath);
     } else if (ebookFile.endsWith('.epub')) {
         return await epubRenderer.renderRandomPage(filePath);
     } else {

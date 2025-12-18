@@ -9,6 +9,6 @@
   "dependencies": {
     "epub": "^1.3.0",
     "express": "^5.2.1",
-    "pdf-parse": "^2.4.5"
+    "pdf-poppler": "^0.2.3"
   }
 }
