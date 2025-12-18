@@ -1,0 +1,27 @@
+Create a small web application using Node.js with ExpressJS and plain JavaScript that does the following:
+
+Reads a configurable local folder containing multiple PDF and EPUB ebooks.
+
+On each page load (or browser refresh), selects:
+
+a random ebook from the folder, and
+
+a random page from that ebook.
+
+Renders that selected page directly in the browser.
+
+Additional requirements:
+
+The app should automatically detect whether a file is PDF or EPUB and handle each format appropriately.
+
+No manual user selection: the book and page must be chosen randomly on every refresh.
+
+There should be a label displaying the filename of the book and the number of the page.
+
+The server should expose a single route (e.g. /) that performs the random selection and serves the content.
+
+Include clear instructions for installing dependencies and running the app locally.
+
+Prefer lightweight, well-maintained libraries for PDF and EPUB rendering.
+
+The final result should be a minimal but functional ExpressJS app that runs locally and works by simply refreshing the browser.

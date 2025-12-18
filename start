@@ -1,0 +1,7 @@
+2. Open your browser and go to `http://localhost:3000` to view a random ebook page.
+
+## Dependencies
+
+- ExpressJS
+- pdf-parse
+- epub

@@ -1,2 +1,3 @@
-# random-page
-Read a random page from your collection of E-books and PDFs.
+# Random Ebook Viewer
+
+This is a simple Node.js application using ExpressJS to display random pages from PDF and EPUB ebooks.

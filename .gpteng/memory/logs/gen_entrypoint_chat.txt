@@ -1,0 +1,207 @@
+
+2025-12-18T12:23:57.845938
+================================ System Message ================================
+
+You will get information about a codebase that is currently on disk in the current folder.
+The user will ask you to write a script that runs the code in a specific way.
+You will answer with code blocks that include all the necessary terminal commands.
+Do not install globally. Do not use sudo.
+Do not explain the code, just give the commands.
+Do not use placeholders, use example values (like . for a folder argument) if necessary.
+
+
+================================ Human Message =================================
+
+
+        Make a unix script that
+        a) installs dependencies
+        b) runs all necessary parts of the codebase (in parallel if necessary)
+        
+Information about the codebase:
+
+```
+File: app.js
+1 const express = require('express');
+2 const path = require('path');
+3 const ebookService = require('./services/ebookService');
+4 
+5 const app = express();
+6 const PORT = process.env.PORT || 3000;
+7 
+8 app.get('/', async (req, res) => {
+9     try {
+10         const { content, filename, pageNumber } = await ebookService.getRandomEbookPage();
+11         res.send(`
+12             <html>
+13                 <head><title>Random Ebook Page</title></head>
+14                 <body>
+15                     <h1>${filename} - Page ${pageNumber}</h1>
+16                     <div>${content}</div>
+17                 </body>
+18             </html>
+19         `);
+20     } catch (error) {
+21         res.status(500).send('Error loading ebook page');
+22     }
+23 });
+24 
+25 app.listen(PORT, () => {
+26     console.log(`Server is running on http://localhost:${PORT}`);
+27 });
+
+File: services/ebookService.js
+1 const fs = require('fs');
+2 const path = require('path');
+3 const pdfRenderer = require('../utils/pdfRenderer');
+4 const epubRenderer = require('../utils/epubRenderer');
+5 
+6 const EBOOKS_DIR = path.join(__dirname, '../ebooks');
+7 
+8 async function getRandomEbookPage() {
+9     const files = fs.readdirSync(EBOOKS_DIR);
+10     const ebookFile = files[Math.floor(Math.random() * files.length)];
+11     const filePath = path.join(EBOOKS_DIR, ebookFile);
+12 
+13     if (ebookFile.endsWith('.pdf')) {
+14         return await pdfRenderer.renderRandomPage(filePath);
+15     } else if (ebookFile.endsWith('.epub')) {
+16         return await epubRenderer.renderRandomPage(filePath);
+17     } else {
+18         throw new Error('Unsupported file format');
+19     }
+20 }
+21 
+22 module.exports = {
+23     getRandomEbookPage
+24 };
+
+File: utils/pdfRenderer.js
+1 const fs = require('fs');
+2 const pdfParse = require('pdf-parse');
+3 
+4 async function renderRandomPage(filePath) {
+5     const dataBuffer = fs.readFileSync(filePath);
+6     const data = await pdfParse(dataBuffer);
+7     const numPages = data.numpages;
+8     const randomPageNumber = Math.floor(Math.random() * numPages) + 1;
+9     const pageContent = data.text.split('\n\n')[randomPageNumber - 1];
+10 
+11     return {
+12         content: pageContent || 'No content available',
+13         filename: filePath.split('/').pop(),
+14         pageNumber: randomPageNumber
+15     };
+16 }
+17 
+18 module.exports = {
+19     renderRandomPage
+20 };
+
+File: utils/epubRenderer.js
+1 const EPub = require('epub');
+2 
+3 function renderRandomPage(filePath) {
+4     return new Promise((resolve, reject) => {
+5         const epub = new EPub(filePath);
+6 
+7         epub.on('end', () => {
+8             const numChapters = epub.flow.length;
+9             const randomChapterIndex = Math.floor(Math.random() * numChapters);
+10             const chapter = epub.flow[randomChapterIndex];
+11 
+12             epub.getChapter(chapter.id, (error, text) => {
+13                 if (error) {
+14                     reject(error);
+15                 } else {
+16                     resolve({
+17                         content: text || 'No content available',
+18                         filename: filePath.split('/').pop(),
+19                         pageNumber: randomChapterIndex + 1
+20                     });
+21                 }
+22             });
+23         });
+24 
+25         epub.on('error', reject);
+26         epub.parse();
+27     });
+28 }
+29 
+30 module.exports = {
+31     renderRandomPage
+32 };
+
+File: public/index.html
+1 <!DOCTYPE html>
+2 <html lang="en">
+3 <head>
+4     <meta charset="UTF-8">
+5     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+6     <title>Random Ebook Page</title>
+7 </head>
+8 <body>
+9     <h1>Random Ebook Page</h1>
+10     <div id="content"></div>
+11 </body>
+12 </html>
+
+File: package.json
+1 {
+2   "name": "random-ebook-viewer",
+3   "version": "1.0.0",
+4   "description": "A simple web app to display random pages from ebooks",
+5   "main": "app.js",
+6   "scripts": {
+7     "start": "node app.js"
+8   },
+9   "dependencies": {
+10     "epub": "^0.3.0",
+11     "express": "^4.18.2",
+12     "pdf-parse": "^1.1.1"
+13   }
+14 }
+
+File: README.md
+1 # Random Ebook Viewer
+2 
+3 This is a simple Node.js application using ExpressJS to display random pages from PDF and EPUB ebooks.
+4 
+5 ## Installation
+6 
+7 1. Clone the repository:
+
+File: repository-url
+1 2. Navigate to the project directory:
+
+File: random-ebook-viewer
+1 3. Install the dependencies:
+
+File: install
+1 4. Place your PDF and EPUB files in the `ebooks` directory.
+2 
+3 ## Running the Application
+4 
+5 1. Start the server:
+
+File: start
+1 2. Open your browser and go to `http://localhost:3000` to view a random ebook page.
+2 
+3 ## Dependencies
+4 
+5 - ExpressJS
+6 - pdf-parse
+7 - epub
+
+```
+
+================================== Ai Message ==================================
+
+```bash
+#!/bin/bash
+
+# a) Install dependencies
+npm install
+
+# b) Run the application
+npm start
+```
